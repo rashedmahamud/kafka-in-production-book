@@ -167,12 +167,16 @@ Here is a detailed breakdown of your configuration and how to tune it for a high
     - Why it matters: Larger values reduce the number of network requests and I/O operations, which is crucial for maximizing throughput.
 
     - Tuning: If your messages are large or your message volume is high, consider increasing MaxPartitionFetchBytes to 2-5 MB to fetch bigger chunks of data from each partition. FetchMaxBytes should always be greater than or equal to MaxPartitionFetchBytes.
+      ```csharp
+         FetchMaxBytes>=MaxPartitionFetchBytes
+      ```
+
 
 - FetchWaitMaxMs (100ms): This is the maximum time the broker will wait for new data to accumulate before sending it to the consumer.
 
    - Why it matters: A lower value prioritizes low latency over throughput, as the consumer won't wait long for a full batch. A higher value leads to larger batches and higher throughput but also increases latency.
 
-  - Tuning: For a low-latency, real-time application, you might tune this down to 10-50ms. For high-throughput batch processing, increasing it to 200-500ms could be beneficial.
+  - Tuning: For a ## low-latency, ## real-time application, you might tune this down to 10-50ms. For high-throughput batch processing, increasing it to 200-500ms could be beneficial.
 
 ## Consumer Group Stability and Rebalancing
  - MaxPollIntervalMs (5 minutes): This setting is a tradeoff between processing time and consumer failure detection.
@@ -186,6 +190,9 @@ Here is a detailed breakdown of your configuration and how to tune it for a high
      - Why it matters: The consumer sends heartbeats to stay in the group. If the broker misses a heartbeat for SessionTimeoutMs, the consumer is considered dead. HeartbeatIntervalMs should be about one-third of SessionTimeoutMs to provide a safety margin.
 
      - Tuning: Your values are well-tuned. A 5s heartbeat to a 30s session timeout is a standard, robust configuration. No changes are usually needed here unless you're experiencing network instability.
+    ```csharp
+       HeartbeatIntervalMs<SessionTimeoutMs
+    ```
 
 ## Data Integrity and Reliability
 - EnableAutoCommit (false): This is the correct setting for a high-performance application.
@@ -198,7 +205,9 @@ Here is a detailed breakdown of your configuration and how to tune it for a high
 
 ## Additional Stability and Efficiency
 PartitionAssignmentStrategy (RoundRobin): This strategy is simple and generally effective for distributing partitions evenly among consumers.
-
+   - CooperativeSticky
+   - Range
+   - RoundRobin
   - Why it matters: This strategy ensures a balanced workload across your consumer instances, which is key for a high-performance system. Other strategies like CooperativeSticky can reduce rebalance times but are more complex.
 
 - ReconnectBackoffMaxMs (5,000ms): This setting controls the maximum delay before a consumer attempts to reconnect to a broker after a failure.
