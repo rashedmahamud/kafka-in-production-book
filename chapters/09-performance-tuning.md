@@ -32,5 +32,3 @@ Scaling Kafka for high throughput and low latency requires careful tuning of bro
 Proper tuning avoids bottlenecks and keeps Kafka responsive at scale.
 
 ---
-
-Shall I prepare Chapter 10 next?
