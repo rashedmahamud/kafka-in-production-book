@@ -42,5 +42,36 @@ In the following chapters, we’ll explore these design considerations with real
 
 ---
 
+Mermaid Diagram (Kafka Consumer Group with Partition Assignment)
+graph TD
+    subgraph Kafka Topic
+        P0[Partition 0]
+        P1[Partition 1]
+        P2[Partition 2]
+        P3[Partition 3]
+    end
+
+    subgraph Consumer Group (group.id = my-consumer-group)
+        C0[Consumer 0]
+        C1[Consumer 1]
+        C2[Consumer 2]
+        C3[Consumer 3]
+    end
+
+    P0 --> C0
+    P1 --> C1
+    P2 --> C2
+    P3 --> C3
+
+🔄 Scalable Setup Explanation
+
+Partitions: Represent logical divisions of a topic. Kafka guarantees message ordering within a partition.
+
+Consumers: Multiple instances of the same application, each handling different partitions.
+
+Consumer Group: Ensures each partition is read by only one consumer at a time.
+
+Scalability: You can increase the number of partitions to scale out your consumers horizontally.
+
 Ready to plan your production Kafka deployment? Let’s move on.
 
