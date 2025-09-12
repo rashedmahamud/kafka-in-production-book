@@ -51,7 +51,6 @@ graph TD
         P2[Partition 2]
         P3[Partition 3]
     end
-
     subgraph Consumer_Group_my_consumer_group
         C0[Consumer 0]
         C1[Consumer 1]
@@ -63,8 +62,6 @@ graph TD
     P1 --> C1
     P2 --> C2
     P3 --> C3
-
-
 ---
 
 ### 🔍 Notes:
