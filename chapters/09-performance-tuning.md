@@ -125,7 +125,7 @@ private async Task ProcessAndCommitAsync(IConsumer<string, string> consumer, Con
         }
     }
 }
-
+```
 
 
 - This pattern ensures the consumer.Consume() method is called frequently (every 100ms or when a message is available), which keeps the heartbeat alive and prevents the max.poll.interval.ms from being exceeded. The actual message processing runs in the background. .
