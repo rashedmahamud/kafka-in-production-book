@@ -43,16 +43,62 @@ In the following chapters, we’ll explore these design considerations with real
 ---
 
 Mermaid Diagram (Kafka Consumer Group with Partition Assignment)
+<details> <summary>✅ Click to copy valid Mermaid markdown</summary>
 ```mermaid
 graph TD
-    subgraph Kafka Topic
+    subgraph Kafka_Topic
         P0[Partition 0]
         P1[Partition 1]
         P2[Partition 2]
         P3[Partition 3]
     end
 
-    subgraph Consumer Group (group.id = my-consumer-group)
+    subgraph Consumer_Group_my_consumer_group
+        C0[Consumer 0]
+        C1[Consumer 1]
+        C2[Consumer 2]
+        C3[Consumer 3]
+    end
+
+    P0 --> C0
+    P1 --> C1
+    P2 --> C2
+    P3 --> C3
+
+
+</details>
+
+---
+
+### 🔍 Notes:
+
+- Avoid special characters like `(`, `)`, `=`, or `.` in **`subgraph` names**.
+- Use underscores `_` or hyphens `-` instead.
+- You can explain the `group.id = my-consumer-group` separately in a heading or caption.
+
+---
+
+### 📝 Optional README Markdown Example:
+
+```markdown
+## Kafka Consumer Group Partition Assignment
+
+This diagram shows how Kafka assigns partitions to consumers within the same consumer group.
+
+- Topic has 4 partitions.
+- 4 consumers are started with the same `group.id`.
+- Each consumer is automatically assigned one partition.
+
+```mermaid
+graph TD
+    subgraph Kafka_Topic
+        P0[Partition 0]
+        P1[Partition 1]
+        P2[Partition 2]
+        P3[Partition 3]
+    end
+
+    subgraph Consumer_Group_my_consumer_group
         C0[Consumer 0]
         C1[Consumer 1]
         C2[Consumer 2]
