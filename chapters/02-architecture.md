@@ -43,7 +43,6 @@ In the following chapters, we’ll explore these design considerations with real
 ---
 
 Mermaid Diagram (Kafka Consumer Group with Partition Assignment)
-<details> <summary>✅ Click to copy valid Mermaid markdown</summary>
 ```mermaid
 graph TD
     subgraph Kafka_Topic
@@ -65,8 +64,6 @@ graph TD
     P2 --> C2
     P3 --> C3
 
-
-</details>
 
 ---
 
