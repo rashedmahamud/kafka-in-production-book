@@ -130,26 +130,16 @@ private async Task ProcessAndCommitAsync(IConsumer<string, string> consumer, Con
 
 - This pattern ensures the consumer.Consume() method is called frequently (every 100ms or when a message is available), which keeps the heartbeat alive and prevents the max.poll.interval.ms from being exceeded. The actual message processing runs in the background. .
 
-  ```csharp
-  AutoOffsetReset = AutoOffsetReset.Earliest,
-
+```csharp
+AutoOffsetReset = AutoOffsetReset.Earliest,
 EnableAutoCommit = false,
-
 MaxPollIntervalMs = 900000,
-
 SessionTimeoutMs = 45000,
-
 HeartbeatIntervalMs = 3000,
-
 EnablePartitionEof = true,
-
-// Additional stability settings
-
 MetadataMaxAgeMs = 300000,
-
 ReconnectBackoffMs = 1000,
-
-ReconnectBackoffMaxMs = 10000 do i need to tune it ?
+ReconnectBackoffMaxMs = 10000 ```
 
 
 
