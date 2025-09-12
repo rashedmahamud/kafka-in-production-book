@@ -172,7 +172,10 @@ Here is a detailed breakdown of your configuration and how to tune it for a high
       ```
 
   - The relationship between HeartbeatIntervalMs, SessionTimeoutMs, and MaxPollIntervalMs is a key to stability, and your settings `(5s < 30s < 300s)` follow the recommended pattern.
-     `HeartbeatIntervalMs < SessionTimeoutMs < MaxPollIntervalMs `
+     ```csharp
+        HeartbeatIntervalMs(5s) < SessionTimeoutMs(30s) < MaxPollIntervalMs (300s)
+     ```
+     
 
 - FetchWaitMaxMs (100ms): This is the maximum time the broker will wait for new data to accumulate before sending it to the consumer.
 
