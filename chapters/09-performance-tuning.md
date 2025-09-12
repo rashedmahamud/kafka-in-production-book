@@ -139,8 +139,7 @@ HeartbeatIntervalMs = 3000,
 EnablePartitionEof = true,
 MetadataMaxAgeMs = 300000,
 ReconnectBackoffMs = 1000,
-ReconnectBackoffMaxMs = 10000 ```
-
+ReconnectBackoffMaxMs = 10000
 
 
 
