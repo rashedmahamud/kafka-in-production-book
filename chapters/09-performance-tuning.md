@@ -164,28 +164,28 @@ Here is a detailed breakdown of your configuration and how to tune it for a high
   ## Data Fetching and Throughput
 - FetchMaxBytes (10 MB) and MaxPartitionFetchBytes (1 MB): These settings are your primary levers for controlling throughput. They define how much data the consumer will attempt to fetch in a single request.
 
-    ## Why it matters: Larger values reduce the number of network requests and I/O operations, which is crucial for maximizing throughput.
+    - Why it matters: Larger values reduce the number of network requests and I/O operations, which is crucial for maximizing throughput.
 
-    ## Tuning: If your messages are large or your message volume is high, consider increasing MaxPartitionFetchBytes to 2-5 MB to fetch bigger chunks of data from each partition. FetchMaxBytes should always be greater than or equal to MaxPartitionFetchBytes.
+    - Tuning: If your messages are large or your message volume is high, consider increasing MaxPartitionFetchBytes to 2-5 MB to fetch bigger chunks of data from each partition. FetchMaxBytes should always be greater than or equal to MaxPartitionFetchBytes.
 
 - FetchWaitMaxMs (100ms): This is the maximum time the broker will wait for new data to accumulate before sending it to the consumer.
 
-   ## Why it matters: A lower value prioritizes low latency over throughput, as the consumer won't wait long for a full batch. A higher value leads to larger batches and higher throughput but also increases latency.
+   - Why it matters: A lower value prioritizes low latency over throughput, as the consumer won't wait long for a full batch. A higher value leads to larger batches and higher throughput but also increases latency.
 
-  ## Tuning: For a low-latency, real-time application, you might tune this down to 10-50ms. For high-throughput batch processing, increasing it to 200-500ms could be beneficial.
+  - Tuning: For a low-latency, real-time application, you might tune this down to 10-50ms. For high-throughput batch processing, increasing it to 200-500ms could be beneficial.
 
 ## Consumer Group Stability and Rebalancing
  - MaxPollIntervalMs (5 minutes): This setting is a tradeoff between processing time and consumer failure detection.
 
-   ## Why it matters: If your consumer takes longer than this to call Consume() again, the broker will assume it's dead and trigger a rebalance.
+   - Why it matters: If your consumer takes longer than this to call Consume() again, the broker will assume it's dead and trigger a rebalance.
 
-   ## Tuning: Your current 5-minute setting is generous. If your processing logic is fast, you can safely lower it to 2-3 minutes. This helps the cluster rebalance faster if a consumer truly crashes, reducing downtime.
+   - Tuning: Your current 5-minute setting is generous. If your processing logic is fast, you can safely lower it to 2-3 minutes. This helps the cluster rebalance faster if a consumer truly crashes, reducing downtime.
 
 - SessionTimeoutMs (30 seconds) and HeartbeatIntervalMs (5 seconds): These are directly related to consumer liveness.
 
-     ## Why it matters: The consumer sends heartbeats to stay in the group. If the broker misses a heartbeat for SessionTimeoutMs, the consumer is considered dead. HeartbeatIntervalMs should be about one-third of SessionTimeoutMs to provide a safety margin.
+     - Why it matters: The consumer sends heartbeats to stay in the group. If the broker misses a heartbeat for SessionTimeoutMs, the consumer is considered dead. HeartbeatIntervalMs should be about one-third of SessionTimeoutMs to provide a safety margin.
 
-     ## Tuning: Your values are well-tuned. A 5s heartbeat to a 30s session timeout is a standard, robust configuration. No changes are usually needed here unless you're experiencing network instability.
+     - Tuning: Your values are well-tuned. A 5s heartbeat to a 30s session timeout is a standard, robust configuration. No changes are usually needed here unless you're experiencing network instability.
 
 ## Data Integrity and Reliability
 - EnableAutoCommit (false): This is the correct setting for a high-performance application.
