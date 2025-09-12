@@ -130,4 +130,40 @@ private async Task ProcessAndCommitAsync(IConsumer<string, string> consumer, Con
 
 - This pattern ensures the consumer.Consume() method is called frequently (every 100ms or when a message is available), which keeps the heartbeat alive and prevents the max.poll.interval.ms from being exceeded. The actual message processing runs in the background. .
 
+  ```csharp
+  AutoOffsetReset = AutoOffsetReset.Earliest,
+
+EnableAutoCommit = false,
+
+MaxPollIntervalMs = 900000,
+
+SessionTimeoutMs = 45000,
+
+HeartbeatIntervalMs = 3000,
+
+EnablePartitionEof = true,
+
+// Additional stability settings
+
+MetadataMaxAgeMs = 300000,
+
+ReconnectBackoffMs = 1000,
+
+ReconnectBackoffMaxMs = 10000 do i need to tune it ?
+```
+
+- MaxPollIntervalMs (900,000ms / 15 minutes): This value is quite high. It's the maximum time a consumer can go without calling Consume(). A high value gives you more time for message processing, but it can also significantly delay partition rebalancing if a consumer fails, as the broker won't detect the failure until after this timeout. A value of 5 minutes (300,000ms) or less is often sufficient for most applications. You should only increase it if your message processing logic takes a very long time.
+
+- SessionTimeoutMs (45,000ms / 45 seconds): This is the time the broker will wait for a heartbeat from the consumer before considering it dead. Your value is good. It's recommended to keep this value between 10 seconds and 30 seconds for a quick rebalance.
+
+- HeartbeatIntervalMs (3,000ms / 3 seconds): This is how often the consumer sends a heartbeat to the broker. Your value is also well-chosen, as it's typically one-third of the SessionTimeoutMs. This ensures the broker is notified of the consumer's health often enough to prevent a timeout.
+
+- EnableAutoCommit (false): This is a good practice. Manual commits give you fine-grained control over when a message is considered processed, preventing data loss or duplication.
+
+## Summary of Recommendations
+- Lower MaxPollIntervalMs: Unless you have very slow message processing, consider lowering this to a more standard value like 300,000 ms (5 minutes). This will improve the speed of rebalancing if a consumer fails.
+
+- Balance All Parameters: The key is to ensure HeartbeatIntervalMs < SessionTimeoutMs < MaxPollIntervalMs. Your current configuration follows this pattern, which is good. For example, a common ratio is 3 seconds, 10 seconds, and 300 seconds.
+
+
 
