@@ -38,13 +38,13 @@ Proper tuning avoids bottlenecks and keeps Kafka responsive at scale.
 
 ## Here are the key steps:
 
--Increase Partitions: First, ensure your Kafka topic has more partitions than the number of consumers you intend to run in parallel. A common practice is to have a number of partitions equal to the desired concurrency level. If the number of consumers exceeds the number of partitions, some consumers will be idle.
+- Increase Partitions: First, ensure your Kafka topic has more partitions than the number of consumers you intend to run in parallel. A common practice is to have a number of partitions equal to the desired concurrency level. If the number of consumers exceeds the number of partitions, some consumers will be idle.
 
--Run Multiple Consumers: Launch multiple instances of your consumer application, all configured with the same group.id.
+- Run Multiple Consumers: Launch multiple instances of your consumer application, all configured with the same group.id.
 
--Automatic Partition Assignment: When these consumers start, they will join the consumer group. The Kafka broker and the consumer group protocol will automatically handle the assignment of partitions among the available consumers. For example, if you have a topic with 4 partitions and you start 4 consumer instances, each instance will be assigned one partition.
+- Automatic Partition Assignment: When these consumers start, they will join the consumer group. The Kafka broker and the consumer group protocol will automatically handle the assignment of partitions among the available consumers. For example, if you have a topic with 4 partitions and you start 4 consumer instances, each instance will be assigned one partition.
 
--Independent Processing: Each consumer instance will then independently and concurrently consume messages from its assigned partition(s). Since each consumer is running on a different thread or even a different machine, they can process messages from their respective partitions in parallel.
+- Independent Processing: Each consumer instance will then independently and concurrently consume messages from its assigned partition(s). Since each consumer is running on a different thread or even a different machine, they can process messages from their respective partitions in parallel.
 
 Implementation
 ## There are two main ways to implement this in code:
