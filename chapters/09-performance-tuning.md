@@ -133,21 +133,25 @@ private async Task ProcessAndCommitAsync(IConsumer<string, string> consumer, Con
 ```csharp
 AutoOffsetReset = AutoOffsetReset.Earliest,
 EnableAutoCommit = false,
-MaxPollIntervalMs = 900000,
-SessionTimeoutMs = 45000,
-HeartbeatIntervalMs = 3000,
 EnablePartitionEof = true,
-MetadataMaxAgeMs = 300000,
-ReconnectBackoffMs = 1000,
-ReconnectBackoffMaxMs = 10000
+AllowAutoCreateTopics = false,
+FetchMaxBytes = 10485760,   // 10 MB
+MaxPartitionFetchBytes = 1048576,   // 1 MB
+FetchWaitMaxMs = 100,   // 100 ms
+MaxPollIntervalMs = 300000, // 5 minutes                
+SessionTimeoutMs = 30000,   // 30 seconds
+HeartbeatIntervalMs = 5000, // 5 seconds
+StatisticsIntervalMs = 60000,   // 60 seconds
+ReconnectBackoffMaxMs = 5000,   // 5 seconds
+PartitionAssignmentStrategy = PartitionAssignmentStrategy.RoundRobin
 ```
 
 
--- MaxPollIntervalMs (900,000ms / 15 minutes): This value is quite high. It's the maximum time a consumer can go without calling Consume(). A high value gives you more time for message processing, but it can also significantly delay partition rebalancing if a consumer fails, as the broker won't detect the failure until after this timeout. A value of 5 minutes (300,000ms) or less is often sufficient for most applications. You should only increase it if your message processing logic takes a very long time.
+- MaxPollIntervalMs (900,000ms / 15 minutes): This value is quite high. It's the maximum time a consumer can go without calling Consume(). A high value gives you more time for message processing, but it can also significantly delay partition rebalancing if a consumer fails, as the broker won't detect the failure until after this timeout. A value of 5 minutes (300,000ms) or less is often sufficient for most applications. You should only increase it if your message processing logic takes a very long time.
 
--- SessionTimeoutMs (45,000ms / 45 seconds): This is the time the broker will wait for a heartbeat from the consumer before considering it dead. Your value is good. It's recommended to keep this value between 10 seconds and 30 seconds for a quick rebalance.
+- SessionTimeoutMs (45,000ms / 45 seconds): This is the time the broker will wait for a heartbeat from the consumer before considering it dead. Your value is good. It's recommended to keep this value between 10 seconds and 30 seconds for a quick rebalance.
 
--- HeartbeatIntervalMs (3,000ms / 3 seconds): This is how often the consumer sends a heartbeat to the broker. Your value is also well-chosen, as it's typically one-third of the SessionTimeoutMs. This ensures the broker is notified of the consumer's health often enough to prevent a timeout.
+- HeartbeatIntervalMs (3,000ms / 3 seconds): This is how often the consumer sends a heartbeat to the broker. Your value is also well-chosen, as it's typically one-third of the SessionTimeoutMs. This ensures the broker is notified of the consumer's health often enough to prevent a timeout.
 
 -- EnableAutoCommit (false): This is a good practice. Manual commits give you fine-grained control over when a message is considered processed, preventing data loss or duplication.
 
