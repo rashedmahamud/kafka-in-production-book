@@ -40,9 +40,14 @@ Your choices in:
 
 In the following chapters, we’ll explore these design considerations with real-world examples and advice.
 
----
+## Kafka Consumer Group Partition Assignment
 
-Mermaid Diagram (Kafka Consumer Group with Partition Assignment)
+This diagram shows how Kafka assigns partitions to consumers within the same consumer group.
+
+- The topic has 4 partitions.
+- 4 consumers are started with the same `group.id`.
+- Each consumer is automatically assigned one partition.
+
 ```mermaid
 graph TD
     subgraph Kafka_Topic
@@ -51,6 +56,7 @@ graph TD
         P2[Partition 2]
         P3[Partition 3]
     end
+
     subgraph Consumer_Group_my_consumer_group
         C0[Consumer 0]
         C1[Consumer 1]
@@ -62,7 +68,9 @@ graph TD
     P1 --> C1
     P2 --> C2
     P3 --> C3
----
+
+
+
 
 ### 🔍 Notes:
 
