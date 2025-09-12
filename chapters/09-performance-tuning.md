@@ -55,20 +55,20 @@ Implementation
 
 - You do not use Task.Run on a single consumer.Consume call to achieve true parallelism across partitions. The Task.Run pattern is for achieving concurrency by offloading blocking calls, not for parallel message consumption across different partitions. To consume in parallel, you must have separate, independent consumer instances reading from different partitions.
 
-  ## Errors at performance
+## Errors at performance
    1. Error consuming message: "Application maximum poll interval (600000ms) exceeded by 198ms"
       - The error message "Application maximum poll interval (600000ms) exceeded" means that your consumer application took too long to call the Consume() method. The MaxPollIntervalMs in your configuration is set to 300000 (5 minutes). The error message shows the maximum interval was actually 600000 (10 minutes). This indicates a discrepancy between your code and your Kafka broker's configuration, which is the default 600000ms for max.poll.interval.ms. Your application is taking longer than 10 minutes (by 198ms) to call Consume().
 
-## Why This Happens
+ ## Why This Happens
 - The max.poll.interval.ms setting defines the maximum amount of time a consumer can go without fetching records from its assigned partitions or sending a heartbeat to the broker. If this time is exceeded, the broker assumes the consumer is dead and will reassign its partitions to another consumer in the same group. This can lead to a rebalance.
 
-## This issue is typically caused by:
+ ## This issue is typically caused by:
 
 - Long-Running Message Processing: The code that processes the message after Consume() is called is taking too long. Since you have await ProcessWithRetriesAsync(...) inside the loop, the main loop is paused while that method runs. If ProcessWithRetriesAsync takes longer than the max.poll.interval.ms, this error will occur.
 
 - Awaiting Blocking Calls: Similar to the previous issue, if ProcessWithRetriesAsync or any other code within your consumption loop is blocking a thread, it can prevent the next Consume() call in the loop from happening in time.
 
-## How to Fix It
+ ## How to Fix It
 - To resolve this error, you must ensure your message processing logic completes within the max.poll.interval.ms limit. The best way to do this is to separate the consumption loop from the message processing logic.
 
 - Increase MaxPollIntervalMs (Temporary Solution): You can increase the MaxPollIntervalMs in your ConsumerConfig to match the time your processing takes. However, this is not a long-term solution. A large interval can delay partition rebalancing in the event of a real consumer failure.
@@ -150,7 +150,9 @@ MetadataMaxAgeMs = 300000,
 ReconnectBackoffMs = 1000,
 
 ReconnectBackoffMaxMs = 10000 do i need to tune it ?
-```
+
+
+
 
 - MaxPollIntervalMs (900,000ms / 15 minutes): This value is quite high. It's the maximum time a consumer can go without calling Consume(). A high value gives you more time for message processing, but it can also significantly delay partition rebalancing if a consumer fails, as the broker won't detect the failure until after this timeout. A value of 5 minutes (300,000ms) or less is often sufficient for most applications. You should only increase it if your message processing logic takes a very long time.
 
