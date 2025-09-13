@@ -29,6 +29,3 @@ Kafka’s power comes from its producers and consumers. Proper tuning and unders
 
 Mastering producers and consumers ensures your data flows efficiently and correctly.
 
----
-
-Want to move on to Chapter 6?
